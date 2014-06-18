@@ -77,8 +77,7 @@ int		t_regex_init( t_regex *this, const char *regex, const int nbr_match, const 
   this->clean_match = &( clean_match );
   this->_n_match = nbr_match;
   status = regcomp( &this->_regex, regex, flags );
-  if ( status )
-    {
+  if ( status ) {
       regerror( status, &this->_regex, error, MAX_ERR_MSG );
       fprintf( stderr, "Error compiling regex %s: %s\n", regex, error );
       return ( 1 );
