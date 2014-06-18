@@ -1,0 +1,14 @@
+easy_lib
+========
+
+A collection of C libraries to make development faster !
+This library is aimed at everyone wishing they could do some real programing without all the trouble with memory management  
+This library includes :
+  * easy regex: An encapsulation of the Unix regular expresion library
+  
+will includes :
+  * easy tabs 
+  * easy string
+  * easy list
+  
+and will maybe even includes some new data structures, like hash-table, queue and, MAYBE, more...
