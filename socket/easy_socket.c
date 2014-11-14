@@ -15,7 +15,7 @@ t_easy_socket   *e_accept( t_easy_socket *this ) {
   memset( &new->_client_addr, 0, sizeof( new->_client_addr ));
   if ( new->_socket = accept( this->_socket, (struct sockaddr*)&new->_client_addr,
     &size) == -1 ) {
-      fprintf( stderr, ERROR_ACCEPT, WSAGetLastError() );
+        fprintf( stderr, ERROR_ACCEPT, WSAGetLastError() );
       return NULL;
   }
   _init_func( new );
@@ -78,7 +78,7 @@ void            _init_func( t_easy_socket *this ) {
   this->e_write = &( e_write );
 }
 
-int             socket_init( t_easy_socket *this, const char *port, t_init *init ) {
+int            socket_init( t_easy_socket *this, const char *port, t_init *init ) {
   WORD         version = MAKEWORD(2,2);
   WSADATA      ws_data;
   int          status;
@@ -94,26 +94,29 @@ int             socket_init( t_easy_socket *this, const char *port, t_init *init
   memset( &hints, 0, sizeof( hints ));
   hints.ai_family = init->sin_family;
   hints.ai_socktype = init->socket_type;
-  hints.ai_protocol = init->socket_prot;
-  if (( status = getaddrinfo( NULL, port, &hints, &serv_info )) != 0 ) {
+    if (( status = getaddrinfo( NULL, port, &hints, &serv_info )) != 0 ) {
     fprintf( stderr, ERROR_GETADDRINFO, gai_strerror( status ) );
     WSACleanup();
     return -1;
   }
 
+
   for ( tmp = serv_info; tmp != NULL; tmp = tmp->ai_next ) {
     if ( this->_socket = socket( tmp->ai_family, tmp->ai_socktype,
-      tmp->ai_protocol ) < 0 ) {
+      tmp->ai_protocol ) == INVALID_SOCKET ) {
         fprintf( stderr, ERROR_INIT_SOCKET, WSAGetLastError() );
         continue;
     }
 
+    printf( "socket = %d\n", this->_socket);
     if ( setsockopt( this->_socket, SOL_SOCKET, SO_REUSEADDR,
-      (char[]){1}, sizeof( int ) ) != 0 ) {
+      (const char[]){1}, sizeof( int ) ) != 0 ) {
         fprintf( stderr, ERROR_SETSOCKOPT, WSAGetLastError() );
         WSACleanup();
         return -1;
     }
+
+    printf( "xouxou\n");
 
     if ( bind( this->_socket, tmp->ai_addr, tmp->ai_addrlen) == -1) {
       close( this->_socket );
@@ -138,4 +141,22 @@ int             socket_init( t_easy_socket *this, const char *port, t_init *init
     return -1;
   }
   return 0;
+}
+
+int       main(void) {
+  t_init  init;
+  t_easy_socket serv_socket, *client_socket;
+
+  init.sin_family = AF_UNSPEC;
+  init.socket_type = SOCK_STREAM;
+
+  if ( socket_init( &serv_socket, "6669", &init ) != 0 ) {
+    fprintf( stderr, "oups" );
+  }
+
+  while ( 42 ) {
+    if ( ( client_socket = serv_socket.e_accept( &serv_socket ) ) != NULL ) {
+      printf( "youps\n");
+    }
+  }
 }
