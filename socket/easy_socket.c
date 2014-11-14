@@ -8,61 +8,34 @@
 #include <process.h>
 #include "easy_socket.h"
 
-/*
-int             e_setsockopt( t_easy_socket *this, const int sock_lvl, const int optname, const int *opval ) {
-  if ( setsockopt( this->_socket, sock_lvl, optname, optval, sizeof( int )) < 0 ) {
-    fprintf( stderr, ERROR_SETSOCKOPT, strerror( errno ));
-    return -1;
+t_easy_socket   *e_accept( t_easy_socket *this ) {
+  t_easy_socket *new;
+  int           size = sizeof( struct sockaddr );
+
+  memset( &new->_client_addr, 0, sizeof( new->_client_addr ));
+  if ( new->_socket = accept( this->_socket, (struct sockaddr*)&new->_client_addr,
+    &size) == -1 ) {
+      fprintf( stderr, ERROR_ACCEPT, WSAGetLastError() );
+      return NULL;
   }
-
-  return 0;
-}
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <sys/wait.h>
-#include <signal.h>
-int             e_bind( t_easy_socket *this ) {
-  if ( bind ( thi
-  s->_socket, ( struct sockaddr * )&this->_sockaddr, sizeof( this->_sockaddr )) < 0 ) {
-    fprintf( stderr, ERROR_BIND, this->_socket, ,strerror( errno ));
-    close( this->_socket );
-    return -1;
-  }
-
-  return 0;
+  _init_func( new );
+  return new;
 }
 
-int             e_listen( t_easy_socket *this, const int backlog ) {
-  if ( listen( this->_socket, backlog ) < 0 ) {
-    fprintf( stderr, ERROR_LISTEN, this->_socket, ,strerror( errno ));
-    close( this->_socket );
-    return -1;
-  }
-
-  return 0;
+int             *e_close( t_easy_socket *this ) {
+  close( this->_socket );
 }
 
-int             e_write( t_easy_socket *this, const char *data, size_t size ) {
-  char          tmp[size + 1];
-
-  tmp =
+char            *e_read( t_easy_socket *this ) {
+  
 }
-*/
+
+
+void            _init_func( t_easy_socket *this ) {
+  this->e_accept = &( e_accept );
+}
+
 int             socket_init( t_easy_socket *this, const char *port, t_init *init ) {
-  /*
-  this->e_setsockopt = &( e_setsockopt );
-  this->e_bind = &( e_bind );
-  this->e_listen = &( e_listen );
-  */
-
   WORD         version = MAKEWORD(2,2);
   WSADATA      ws_data;
   int          status;
@@ -110,11 +83,14 @@ int             socket_init( t_easy_socket *this, const char *port, t_init *init
 
   if ( tmp == NULL ) {
     fprintf( stderr, BIND_FAIL, port );
+    WSACleanup();
     return -1;
   }
   freeaddrinfo( serv_info );
 
   if ( listen( this->_socket, BACKLOG ) == -1 ) {
+    close( this->_socket );
+    WSACleanup();
     fprintf( stderr, ERROR_LISTEN);
     return -1;
   }

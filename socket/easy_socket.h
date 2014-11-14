@@ -7,10 +7,10 @@
 # define        ERROR_LISTEN      "Failed to listen\n"
 # define        BIND_FAIL         "Socket failed to bind socket to port %d\n"
 # define        ERROR_GETADDRINFO "GetAddrInfo failed: %s\n"
+# define        ERROR_ACCEPT      "Accept failed: %d\n"
 # define        BACKLOG           10
 
 typedef struct  s_easy_socket t_easy_socket;
-
 typedef struct  s_easy_socket {
 /*
   int           ( *e_setsockopt )( t_easy_socket *, const int, const int, const int * );
@@ -19,7 +19,12 @@ typedef struct  s_easy_socket {
   int           ( *e_write ) ( t_easy_socket *, const char *, size_t size );
 */
 
+  t_easy_socket *( *e_accept )( t_easy_socket * );
+  int           ( *e_close )( t_easy_socket * );
+  char          *( *e_read )( t_easy_socket * );
+
   int           _socket;
+  struct sockaddr_in _client_addr;
 }               t_easy_socket;
 
 typedef struct          s_init {
@@ -29,5 +34,6 @@ typedef struct          s_init {
 }                       t_init;
 
 int             socket_init( t_easy_socket *, const char*, t_init * );
+void            _init_func( t_easy_socket * );
 
 #endif          /* !EASY_SOCKET_H_ */
