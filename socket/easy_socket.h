@@ -8,20 +8,17 @@
 # define        BIND_FAIL         "Socket failed to bind socket to port %d\n"
 # define        ERROR_GETADDRINFO "GetAddrInfo failed: %s\n"
 # define        ERROR_ACCEPT      "Accept failed: %d\n"
+# define        ERROR_STRLEN      "You have to provide a string\n"
+# define        ERROR_SEND        "Send failed\n"
 # define        BACKLOG           10
+# define        BUFF_SIZE         124
 
 typedef struct  s_easy_socket t_easy_socket;
 typedef struct  s_easy_socket {
-/*
-  int           ( *e_setsockopt )( t_easy_socket *, const int, const int, const int * );
-  int           ( *e_bind )( t_easy_socket *);
-  int           ( *e_listen ) ( t_easy_socket *, const int );
-  int           ( *e_write ) ( t_easy_socket *, const char *, size_t size );
-*/
-
   t_easy_socket *( *e_accept )( t_easy_socket * );
   int           ( *e_close )( t_easy_socket * );
-  char          *( *e_read )( t_easy_socket * );
+  int           ( *e_write )( t_easy_socket *, const char * );
+  int           *( *e_read )( t_easy_socket * );
 
   int           _socket;
   struct sockaddr_in _client_addr;

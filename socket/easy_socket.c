@@ -26,13 +26,33 @@ int             *e_close( t_easy_socket *this ) {
   close( this->_socket );
 }
 
+int             e_write( t_easy_socket *this, const char *str ) {
+  int           len, bytes = 0, bytes_left = 0, total = 0;
+
+  if ( str == NULL || ( len = strlen( str ) <= 0 ) ) {
+    fprintf( stderr, ERROR_STRLEN);
+    return -1;
+  }
+
+  bytes_left = len;
+  while ( total < len ) {
+    if ( ( bytes = send( this->_socket, str + total, bytes_left, 0 ) ) == -1 ) {
+      fprintf( stderr, ERROR_SEND);
+      return -1;
+    }
+    total += bytes;
+    bytes_left -= bytes;
+  }
+  return 0;
+}
+
 char            *e_read( t_easy_socket *this ) {
   
 }
 
-
 void            _init_func( t_easy_socket *this ) {
   this->e_accept = &( e_accept );
+  this->e_write = &( e_write );
 }
 
 int             socket_init( t_easy_socket *this, const char *port, t_init *init ) {
