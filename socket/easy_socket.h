@@ -10,6 +10,9 @@
 # define        ERROR_ACCEPT      "Accept failed: %d\n"
 # define        ERROR_STRLEN      "You have to provide a string\n"
 # define        ERROR_SEND        "Send failed\n"
+# define        ERROR_RECV        "Recv failed\n"
+# define        ERROR_IOCTLSOCK   "Ioctlsocket failed to assert socket data: %d\n"
+# define        MALLOC_FAIL       "Could not alocate memory for buffer\n"
 # define        BACKLOG           10
 # define        BUFF_SIZE         124
 

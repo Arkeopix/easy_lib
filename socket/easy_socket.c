@@ -47,7 +47,30 @@ int             e_write( t_easy_socket *this, const char *str ) {
 }
 
 char            *e_read( t_easy_socket *this ) {
-  
+  char          buff[BUFF_SIZE];
+  char          *ret;
+  unsigned long n = 0;
+  int           total = 0, bytes;
+
+  if ( ioctlsocket( this->_socket, FIONREAD, &n) < 0 ) {
+    fprintf( stderr, ERROR_IOCTLSOCK, WSAGetLastError() );
+    return NULL;
+  }
+  if ( ( ret = malloc( n * sizeof( *ret ) ) ) == NULL ) {
+    fprintf( stderr, MALLOC_FAIL);
+    return NULL;
+  }
+
+  while ( total < n ) {
+    if ( bytes = recv( this->_socket, buff, BUFF_SIZE, 0 ) <= 0 ) {
+      fprintf( stderr, ERROR_RECV );
+      free( ret );
+      return NULL;
+    }
+    strncpy( ret, buff, total );
+    total += bytes;
+  }
+  return ret;
 }
 
 void            _init_func( t_easy_socket *this ) {
