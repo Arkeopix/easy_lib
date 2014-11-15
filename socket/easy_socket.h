@@ -28,13 +28,7 @@ typedef struct  s_easy_socket {
   struct sockaddr_in _client_addr;
 }               t_easy_socket;
 
-typedef struct          s_init {
-  int                   sin_family;
-  int                   socket_type;
-  int                   socket_prot;
-}                       t_init;
-
-int             socket_init( t_easy_socket *, const char*, t_init * );
+int             socket_init( t_easy_socket *, const char* );
 void            _init_func( t_easy_socket * );
 
 #endif          /* !EASY_SOCKET_H_ */

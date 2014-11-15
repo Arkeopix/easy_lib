@@ -78,7 +78,7 @@ void            _init_func( t_easy_socket *this ) {
   this->e_write = &( e_write );
 }
 
-int            socket_init( t_easy_socket *this, const char *port, t_init *init ) {
+int            socket_init( t_easy_socket *this, const char *port ) {
   WORD         version = MAKEWORD(2,2);
   WSADATA      ws_data;
   int          status;
@@ -92,40 +92,35 @@ int            socket_init( t_easy_socket *this, const char *port, t_init *init 
   }
 
   memset( &hints, 0, sizeof( hints ));
-  hints.ai_family = init->sin_family;
-  hints.ai_socktype = init->socket_type;
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
     if (( status = getaddrinfo( NULL, port, &hints, &serv_info )) != 0 ) {
     fprintf( stderr, ERROR_GETADDRINFO, gai_strerror( status ) );
     WSACleanup();
     return -1;
   }
 
-
   for ( tmp = serv_info; tmp != NULL; tmp = tmp->ai_next ) {
     if ( this->_socket = socket( tmp->ai_family, tmp->ai_socktype,
       tmp->ai_protocol ) == INVALID_SOCKET ) {
         fprintf( stderr, ERROR_INIT_SOCKET, WSAGetLastError() );
-        continue;
     }
-
-    printf( "socket = %d\n", this->_socket);
-    if ( setsockopt( this->_socket, SOL_SOCKET, SO_REUSEADDR,
-      (const char[]){1}, sizeof( int ) ) != 0 ) {
-        fprintf( stderr, ERROR_SETSOCKOPT, WSAGetLastError() );
-        WSACleanup();
-        return -1;
-    }
-
-    printf( "xouxou\n");
-
-    if ( bind( this->_socket, tmp->ai_addr, tmp->ai_addrlen) == -1) {
-      close( this->_socket );
-      fprintf( stderr, BIND_FAIL, port );
-      continue;
-    }
-
-    break;
   }
+
+  printf( "socket = %d\n", this->_socket);
+  if ( setsockopt( this->_socket, SOL_SOCKET, SO_REUSEADDR,
+    (const char[]){1}, sizeof( int ) ) != 0 ) {
+      fprintf( stderr, ERROR_SETSOCKOPT, WSAGetLastError() );
+      WSACleanup();
+      return -1;
+  }
+  printf( "xouxou\n");
+
+  if ( bind( this->_socket, tmp->ai_addr, tmp->ai_addrlen) == -1) {
+    close( this->_socket );
+    fprintf( stderr, BIND_FAIL, port );
+  }
+
 
   if ( tmp == NULL ) {
     fprintf( stderr, BIND_FAIL, port );
@@ -144,13 +139,9 @@ int            socket_init( t_easy_socket *this, const char *port, t_init *init 
 }
 
 int       main(void) {
-  t_init  init;
   t_easy_socket serv_socket, *client_socket;
 
-  init.sin_family = AF_UNSPEC;
-  init.socket_type = SOCK_STREAM;
-
-  if ( socket_init( &serv_socket, "6669", &init ) != 0 ) {
+  if ( socket_init( &serv_socket, "6669" ) != 0 ) {
     fprintf( stderr, "oups" );
   }
 
