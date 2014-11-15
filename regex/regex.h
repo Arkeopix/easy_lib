@@ -9,27 +9,27 @@
 */
 
 #ifndef			REGEX_H_
-# define		REGEX_H_
+#define		REGEX_H_
 
-# define		MAX_ERR_MSG	0x1000
-# define		MATCH_MALLOC(x)	4 * x
+#define		MAX_ERR_MSG	0x1000
+#define		MATCH_MALLOC(x)	4 * x
 
-typedef struct		s_regex t_regex;
+typedef struct s_regex t_regex;
 
-typedef struct		s_regex {
-  int			(*match)(t_regex *, const char *);
-  char			*(*get_match)(t_regex *,const int);
-  void			(*clean_match)(t_regex *);
-  regex_t		_regex;
-  int			_n_match;
-  char			**_f_match;
-  int			_f_size;
-}			t_regex;
+typedef struct s_regex {
+	int (*match) (t_regex *, const char *);
+	char *(*get_match) (t_regex *, const int);
+	void (*clean_match) (t_regex *);
+	regex_t _regex;
+	int _n_match;
+	char **_f_match;
+	int _f_size;
+} t_regex;
 
-int			t_regex_init(t_regex *, const char *, const int, const int);
-int			t_regex_destroy(t_regex *);
-int			match(t_regex *, const char *);
-char			*get_match(t_regex*, const int);
-void			clean_match(t_regex *);
+int t_regex_init(t_regex *, const char *, const int, const int);
+int t_regex_destroy(t_regex *);
+int match(t_regex *, const char *);
+char *get_match(t_regex *, const int);
+void clean_match(t_regex *);
 
-#endif			/* !REGEX_H_ */
+#endif				/* !REGEX_H_ */
