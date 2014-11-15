@@ -11,7 +11,7 @@ will includes :
   * easy string
   * easy list
   * easy Socket
-  
+  * easy ncurses
 and will maybe even includes some new data structures, like hash-table, queue and, MAYBE, more...
 
 This is open source, so if you feel something is missing, or done wrong, just do your thing !
