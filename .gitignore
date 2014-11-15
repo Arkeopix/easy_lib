@@ -89,4 +89,5 @@ tramp
 *.x86_64
 *.hex
 
-
+.idea/
+CMakeLists.txt
