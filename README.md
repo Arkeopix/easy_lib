@@ -6,14 +6,16 @@ This library is aimed at everyone wishing they could do some real programing wit
 
 This library includes :
   * easy regex: An encapsulation of the Unix regular expresion library
-  
+
 will includes :
-  * easy array 
+  * easy array
   * easy string
   * easy tree
   * easy list
-  * easy Socket
+  * easy socket
   * easy ncurses
+  * easy thread (yay!!)
+  * easy map
 
 and will maybe even includes some new data structures, like hash-table, queue and, MAYBE, more...
 
