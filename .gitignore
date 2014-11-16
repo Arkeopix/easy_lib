@@ -21,13 +21,11 @@
 *.i*86
 *.x86_64
 *.hex
-<<<<<<< HEAD
 
 # Test file
 main.c
 *.kdev4
 .kdev4
-=======
 ### https://raw.github.com/github/gitignore/1a6b68c0068c6909206047b6eecaecb22ad67f64/Global/Emacs.gitignore
 
 # -*- mode: gitignore; -*-
@@ -98,4 +96,3 @@ tramp
 
 .idea/
 CMakeLists.txt
->>>>>>> 9369508091bbf9c536b098e7b8f70246da034c3a
