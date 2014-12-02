@@ -139,12 +139,8 @@ int socket_init(t_easy_socket * this, const char *port)
 		if (this->_socket = socket(tmp->ai_family, tmp->ai_socktype,
 					   tmp->ai_protocol) ==
 		    -1) {
-<<<<<<< HEAD
-		fprintf(stderr, ERROR_INIT_SOCKET), perror("socket");
-=======
 			fprintf(stderr, ERROR_INIT_SOCKET), perror("socket");
 			return -1;
->>>>>>> 8336c0d68af999483d4708e8e469d9544165dfc7
 		}
 	}
 
