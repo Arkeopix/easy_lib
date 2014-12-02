@@ -1,7 +1,7 @@
 #ifndef		EASY_SDL_
 # define	EASY_SDL_
 
-# include	<SD2/SDL.h>
+# include	<SDL2/SDL.h>
 
 # define	VIDEO	1
 # define	SOUND	2
@@ -17,7 +17,7 @@ typedef struct	s_sdl {
   
 }		t_sdl;	
 
-int		t_sdl_init(t_sdl *, const int, const char*);
+int		t_sdl_init(t_sdl *, const int, const char*, const int, const int);
 int		t_sdl_destroy(t_sdl *);
 
 #endif		/* !EASY_SDL */
