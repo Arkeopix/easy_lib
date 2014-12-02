@@ -125,6 +125,7 @@ int socket_init(t_easy_socket * this, const char *port)
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_PASSIVE;
 	if ((status = getaddrinfo(NULL, port, &hints, &serv_info)) != 0) {
 		fprintf(stderr, ERROR_GETADDRINFO, gai_strerror(status));
 #ifdef _WIN32
@@ -134,10 +135,11 @@ int socket_init(t_easy_socket * this, const char *port)
 	}
 
 	for (tmp = serv_info; tmp != NULL; tmp = tmp->ai_next) {
+	  printf("prot %d\n", tmp->ai_protocol);
 		if (this->_socket = socket(tmp->ai_family, tmp->ai_socktype,
-					   tmp->ai_protocol) <
-		    0) {
-  fprintf(stderr, ERROR_INIT_SOCKET), perror("socket");
+					   tmp->ai_protocol) ==
+		    -1) {
+		fprintf(stderr, ERROR_INIT_SOCKET), perror("socket");
 		}
 	}
 
