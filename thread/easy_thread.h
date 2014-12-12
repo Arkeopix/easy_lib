@@ -5,14 +5,20 @@
 
 struct			s_easy_thread;
 
+typedef union {
+  double (*func_one)(void*);
+  double (*func_multiple)(void*, ...);
+} fptrs;
+
 typedef	void*		(*handler)(void*);
-typedef	int		(*fptr)(struct s_easy_thread*, ...);
+typedef	int		(*fptr)(void*);
+typedef	int		(*mptr)(void*, void*);
 
 typedef struct		s_easy_thread
 {
   pthread_t		thread;
   handler		handle;
-  fptr			create;
+  mptr			create;
   fptr			join;
   pthread_attr_t*	attr;
   void*			arg;
