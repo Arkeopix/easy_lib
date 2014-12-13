@@ -28,5 +28,6 @@ t_list*			easy_list_remove_last(t_list **self);
 t_list*			easy_list_remove_first(t_list **self);
 t_list*			easy_list_remove_at(t_list **self, unsigned int n);
 t_list*			easy_list_constructor(t_list **list);
+t_list*			easy_list_free_node(t_list* node);
 
 #endif /* !LIST_H_ */
