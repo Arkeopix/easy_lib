@@ -1,6 +1,26 @@
 #include "easy_sdl.h"
 #include <stdio.h>
 
+SDL_Surface	*t_sdl_load_bmp(const char *path) {  
+  SDL_Surface	*surface;
+
+  if ((surface = SDL_LoadBMP(path)) == NULL) {
+    fprintf(stderr, ERROR_LOADMEDIA, SDL_GetError());
+    return NULL;
+  }
+  return surface;
+}
+
+int		blit_surface(t_sdl *this, SDL_Surface *surface) {
+  printf("coucou\n");
+  if ((SDL_BlitSurface(surface, NULL, this->_surface, NULL)) < 0) {
+    fprintf(stderr, ERROR_BLITSURFACE, SDL_GetError());
+    return -1;
+  }
+  SDL_UpdateWindowSurface(this->_window);
+  return 0;
+}
+
 int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
 			   const int screen_x, const int screen_y) {
   if (SDL_Init(init_mod == 1 ? SDL_INIT_VIDEO 
@@ -18,6 +38,8 @@ int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
       this->_surface = SDL_GetWindowSurface(this->_window);
     }
   }
+  this->blit_surface = &(blit_surface);
+  this->_main_loop_flag = 1;
   return 0;
 }
 
@@ -27,32 +49,12 @@ int		t_sdl_destroy(t_sdl *this) {
   return 0;
 }
 
-int		t_sdl_load_media(SDL_Surface *surface, const char *path) {
-  
-
-  if ((surface = SDL_LoadBMP(path)) == NULL) {
-    fprintf(stderr, ERROR_LOADMEDIA, SDL_GetError());
-    return -1;
-  }
-  return 0;
-}
-
-int		blit_surface(t_sdl *this, SDL_Surface *surface) {
-  if ((SDL_BlitSurface(surface, NULL, this->_surface, NULL)) < 0) {
-    fprintf(stderr, ERROR_BLITSURFACE, SDL_GetError());
-    return -1;
-  }
-  SDL_UpdateWindowSurface(this->_window);
-  return 0;
-}
-
 int main() {
   t_sdl test;
 
   t_sdl_init(&test, VIDEO, "test", 500, 500);
-  SDL_Surface image_test;
-  t_sdl_load_BMP(&image_test, "index.jpeg");
-  test.blit_surface(&test, &image_test);
+  SDL_Surface *image_test = t_sdl_load_bmp("index.bmp");
+  test.blit_surface(&test, image_test);
   t_sdl_destroy(&test);
   return 0;
 }
