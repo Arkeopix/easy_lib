@@ -21,6 +21,8 @@ typedef struct	s_sdl {
   
   int		(*blit_surface)(t_sdl *, SDL_Surface *);
   int		(*poll_event)(t_sdl *);
+  int		(*apply_bmp_stretch)(t_sdl *, SDL_Surface *);
+  SDL_Surface	*(*load_bmp_stretch)(t_sdl *, const char *);
 }		t_sdl;	
 
 int		t_sdl_init(t_sdl *, const int, const char*, const int, const int);
