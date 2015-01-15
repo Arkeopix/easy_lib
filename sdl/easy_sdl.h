@@ -18,9 +18,9 @@ typedef struct	s_sdl {
   SDL_Window	*_window;
   SDL_Surface	*_surface;
   SDL_Event	_event;
-  int		_main_loop_flag;
   
   int		(*blit_surface)(t_sdl *, SDL_Surface *);
+  int		(*poll_event)(t_sdl *);
 }		t_sdl;	
 
 int		t_sdl_init(t_sdl *, const int, const char*, const int, const int);

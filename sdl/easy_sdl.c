@@ -21,6 +21,11 @@ int		blit_surface(t_sdl *this, SDL_Surface *surface) {
   return 0;
 }
 
+int		poll_event(t_sdl *this) {
+  SDL_PollEvent(&this->_event);
+  return this->_event.type;
+}
+
 int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
 			   const int screen_x, const int screen_y) {
   if (SDL_Init(init_mod == 1 ? SDL_INIT_VIDEO 
@@ -39,7 +44,7 @@ int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
     }
   }
   this->blit_surface = &(blit_surface);
-  this->_main_loop_flag = 1;
+  this->poll_event = &(poll_event);
   return 0;
 }
 
