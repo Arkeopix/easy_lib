@@ -18,6 +18,8 @@ typedef struct	s_sdl {
   SDL_Window	*_window;
   SDL_Surface	*_surface;
   SDL_Event	_event;
+  int		_width;
+  int		_heigth;
   
   int		(*blit_surface)(t_sdl *, SDL_Surface *);
   int		(*poll_event)(t_sdl *);

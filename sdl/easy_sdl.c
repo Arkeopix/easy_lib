@@ -33,9 +33,10 @@ int		apply_bmp_stretch(t_sdl *this, SDL_Surface *surface) {
 
   stretch_rect.x = 0;
   stretch_rect.y = 0;
-  stretch_rect.w = SCREEN_WIDTH;
-  stretch_rect.h = SCREEN_HEIGHT;
+  stretch_rect.w = this->_width;
+  stretch_rect.h = this->_heigth;
   SDL_BlitScaled(surface, NULL, this->_surface, &stretch_rect);
+  SDL_UpdateWindowSurface(this->_window);
   return 0;
 }
 
@@ -50,7 +51,9 @@ SDL_Surface	*t_sdl_load_bmp(const char *path) {
 }
 
 int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
-			   const int screen_x, const int screen_y) {
+			   const int width, const int heigth) {
+  this->_width = width; 
+  this->_heigth = heigth; 
   if (SDL_Init(init_mod == 1 ? SDL_INIT_VIDEO 
 	       : init_mod == 2 ? SDL_INIT_AUDIO 
 	       : SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
@@ -59,7 +62,7 @@ int		t_sdl_init(t_sdl *this, const int init_mod, const char *name,
     if ((this->_window = SDL_CreateWindow(name, 
 					 SDL_WINDOWPOS_UNDEFINED, 
 					 SDL_WINDOWPOS_UNDEFINED,
-					 screen_x, screen_y,
+					 this->_width, this->_heigth,
 					 SDL_WINDOW_SHOWN)) == NULL) {
       fprintf(stderr, ERROR_WINDOW_CREATE, SDL_GetError());
     } else {
@@ -84,7 +87,7 @@ int main() {
 
   t_sdl_init(&test, VIDEO, "test", 500, 500);
   SDL_Surface *image_test = test.load_bmp_stretch(&test, "index.bmp");
-  test.blit_surface(&test, image_test);
+  test.apply_bmp_stretch(&test, image_test);
   int event_type;
   while (event_type = test.poll_event(&test)) {
     if (event_type == SDL_QUIT) {
