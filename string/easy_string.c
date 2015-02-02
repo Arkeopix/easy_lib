@@ -13,7 +13,6 @@ int		e_resize(t_easy_string *this, const int new_size, ...) {
 	c = va_arg(ap, int);
 	printf("char = [%c]\n", c);
 	if (new_size > this->allocated_memory) {
-		/* resize and strcat with buff */
 		if ((this->string = realloc(this->string, new_size + 1)) == NULL) {
 			fprintf(stderr, ERROR_MALLOC_FAILED, strerror(errno));
 			exit(-1);
@@ -42,10 +41,44 @@ int		e_len(t_easy_string *this) {
 	return this->len;
 }
 
+int		e_reserve(t_easy_string *this, const int new_size) {
+	if ((this->string = realloc(this->string, new_size + 1)) == NULL) {
+		fprintf(stderr, ERROR_MALLOC_FAILED, strerror(errno));
+		exit(-1);
+	}
+	this->allocated_memory = new_size;
+	return new_size;
+}
+
+int		e_clear(t_easy_string *this) {
+	memset(this->string, 0, this->len * sizeof(char));
+	this->len = 0;
+	return 0;
+}
+
+int		e_empty(t_easy_string *this) {
+	if (this->len == 0 || this->string == NULL) {
+		return 1;
+	}
+	return 0;
+}
+
+int		e_shrink_to_fit(t_easy_string *this) {
+	if ((this->string = realloc(this->string, this->len + 1)) == NULL) {
+		fprintf(stderr, ERROR_MALLOC_FAILED, strerror(errno));
+		exit(-1);
+	}
+	return this->allocated_memory = this->len;
+}
+
 int		e_string_init(t_easy_string *this, char *str) {
 	this->len = strlen(str);
 	this->e_len = &e_len;
 	this->e_resize = &e_resize;
+	this->e_reserve = &e_reserve;
+	this->e_clear = &e_clear;
+	this->e_empty = &e_empty;
+	this->e_shrink_to_fit = &e_shrink_to_fit;
 	if ((this->string = malloc((this->len + 1) * sizeof(char))) == NULL) {
 		fprintf(stderr, ERROR_MALLOC_FAILED, strerror(errno));
 		exit(-1);
@@ -73,6 +106,8 @@ int main() {
 	printf("string after resize 1 = %s\n", str.string);
 	str.e_resize(&str, str.e_len(&str) - 7);
 	printf("%s\n", str.string);
+	str.e_clear(&str);
+	printf("[%s]\n", str.string);
 	e_string_destroy(&str);
 	return 0;
 }

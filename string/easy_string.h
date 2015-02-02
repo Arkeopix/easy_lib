@@ -10,6 +10,10 @@ typedef struct	s_easy_string {
 	
 	int			(*e_len)(struct s_easy_string *this);
 	int			(*e_resize)(struct s_easy_string *this, const int new_size, ...);
+	int			(*e_reserve)(struct s_easy_string *this, const int new_size);
+	int			(*e_clear)(struct s_easy_string *this);
+	int			(*e_empty)(struct s_easy_string *this);
+	int			(*e_shrink_to_fit)(struct s_easy_string *this);
 }				t_easy_string;
 
 int		e_string_init(t_easy_string *this, char *str);
